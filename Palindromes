@@ -1,0 +1,59 @@
+/* This program will check if a word or a sentence is a palindrome.
+After checking, the program will print out results to the screen and write them to a file. */ 
+
+import java.util.Scanner; //Needed to read from files.
+import java.io.*; //Needed to open, create and write to files.
+
+public class Palindromes
+{
+	public static void main (String [] args) throws IOException
+	{
+		final int MAX_LINES = 20; //Create constant of maximum lines we need to read.
+		int index = 0; //A variable for index number of arrays.
+		String[] dirty = new String[MAX_LINES]; //Create a dirty string array.
+		String[] clean = new String[MAX_LINES]; //Create a clean string array.
+		String line, cleanLine; //Strings to hold lines red from a file.
+		char[] array; //Create a character arrays.
+		
+		File palindrome = new File("Palindrome.txt"); //Open text file to read from.
+		Scanner reader = new Scanner(palindrome); //Read from the file.
+		FileWriter newFile = new FileWriter("output.txt", true); //Create a new file to write the output of the program.. 
+		PrintWriter writer = new PrintWriter(newFile); //Write the output or results to the file.
+		
+		while (reader.hasNext() && index < MAX_LINES){ //Check if the file contains more lines and read up to 20 lines from it.
+			line = reader.nextLine(); //Read the next line from the file.
+			line = line.trim(); //Delete leading and trailing white spaces if any.
+			if (line.isEmpty()) continue; //Check if the line is empty.
+			dirty[index] = line; //Assign the line to dirty strings array.
+			array = new char[dirty[index].length()]; //Convert the string to a char array to check if they contain letters and digits.
+			for (int i = 0; i < array.length; i++) //Looping inside the char array.
+				if (Character.isLetterOrDigit(dirty[index].charAt(i))) //Check if character from the arrays is letter or digit. 
+					array [i] = (Character.toLowerCase(dirty[index].charAt(i))); //Convert uppercase letters to lowercase.
+			
+			cleanLine = new String(array); //Build a new string from the char array we checked.
+			cleanLine = cleanLine.replace("\0",""); //Clean up the string from empty characters.
+			clean[index] = cleanLine; //Add the clean string to the clean string array.
+			if (isPalindrome(clean[index])){ //Check if the string is a palindrome.
+				System.out.println(dirty[index] + " is a palindrome."); //Print the result to the screen.
+				writer.println(dirty[index] + " is a palindrome."); //Write the result to the file.
+			}
+			else{
+				System.out.println(dirty[index] + " is not a palindrome."); //Print the result to the screen.
+				writer.println(dirty[index] + " is not a palindrome."); //Write the result to the file.
+			}
+			index++; //Check the next index of the array.
+		}
+		reader.close(); //Close the input file after reading from it.
+		writer.close(); //Close the output file after writing to it.
+	}
+	private static boolean isPalindrome(String palindrome) //Create a method to check for palindromes.
+	{
+		int position = palindrome.length(); //Get the number of characters in the string.
+		boolean isValidPalindrome = true; //Create a boolean flag.
+		
+		for (int i = 0; i < position/2; i++) //Cut the string in half.
+			if (palindrome.charAt(i) != palindrome.charAt(position-i-1)) //Check if characters match (First with last, second with last second and so on).
+				isValidPalindrome = false; //If there is no match the flag will set to false.
+			return isValidPalindrome; //Return the result.
+	}
+}
